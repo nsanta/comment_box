@@ -11,12 +11,21 @@ defmodule CommentBoxWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
   end
 
   scope "/", CommentBoxWeb do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+  end
+  
+  scope "/api/v1", CommentBoxWeb.Api.V1 do
+    pipe_through :api
+    
+    post "/sessions", SessionsController, :create
+    post "/registrations", RegistrationsController, :create
+    delete "/sessions", SessionsController, :delete
   end
 
 end
