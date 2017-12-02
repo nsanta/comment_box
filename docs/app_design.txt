@@ -1,0 +1,62 @@
+Application Design:
+
+## End User endpoints
+
+Endpoint: GET /embed/comments?url=URL
+params:
+  url: the canonical URL
+
+This endpoint will provide a SPA page which will display all the functionality
+for the end user:
+   - List and create comments
+   - Login and logout
+   - Register
+
+Endpoint: GET /admin
+
+This endpoint will provide a list of comments with the sentiment analysis
+The admin only can get access to this page
+
+
+API endpoints:
+
+The API only supports JSON requests and provides responses in JSON
+
+Endpoint: GET /api/v1/comments?url=URL
+params:
+  url: the canonical URL
+
+This endpoint returns a list of comments.
+
+Endpoint: POST /api/v1/comments
+
+Body params:
+  url: the canonical URL
+  comment: 
+    message: The message of the comment
+
+This endpoint is used for create a comment.
+
+
+Endpoint: POST /api/v1/sessions
+
+Body params:
+  email: the user email address
+  password: the user password
+
+This endpoint is used login a user.
+
+Endpoint: DELETE /api/v1/sessions
+
+
+This endpoint is used logout a user.
+
+
+Endpoint: POST /api/v1/registrations
+
+Body params:
+  email: the user email address
+  password: the user password
+  password_confirmation: the password confirmation. Need to match with password
+
+This endpoint is used register a user.
