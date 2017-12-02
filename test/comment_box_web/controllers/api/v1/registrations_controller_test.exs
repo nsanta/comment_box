@@ -9,7 +9,6 @@ defmodule CommentBoxWeb.Api.V1.RegistrationsControllerTest do
     test "registers a new user with valid attributes", %{conn: conn} do 
       conn = post conn, "/api/v1/registrations", user: @valid_attrs
       [user | _list] = Auth.list_users
-      assert  user.email == "email@example.com"
       assert conn.status == 204
       assert Guardian.Plug.current_resource(conn).id == user.id
     end

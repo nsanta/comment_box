@@ -4,7 +4,7 @@ defmodule CommentBoxWeb.Api.V1.SessionsController do
   alias CommentBox.Auth
   alias CommentBox.Auth.Guardian
 
-  def create(conn, %{"user" => %{"email" => email, "password" => password}}) do 
+  def create(conn, %{"user" => %{"email" => email, "password" => password}}) do
     auth = Auth.authenticate_user(email, password)
     login_reply(auth, conn)
   end
