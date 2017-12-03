@@ -14,6 +14,7 @@ defmodule CommentBoxWeb.ConnCase do
   """
 
   use ExUnit.CaseTemplate
+  alias CommentBox.Auth
 
   using do
     quote do
@@ -26,13 +27,36 @@ defmodule CommentBoxWeb.ConnCase do
     end
   end
 
+  @default_opts [
+    store: :cookie,
+    key: "secretkey",
+    encryption_salt: "encrypted cookie salt",
+    signing_salt: "signing salt"
+  ]
+  @signing_opts Plug.Session.init(Keyword.put(@default_opts, :encrypt, false))
+
 
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(CommentBox.Repo)
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(CommentBox.Repo, {:shared, self()})
     end
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    {conn, user} = if tags[:authenticated] do
+      {:ok, user} = Auth.create_user(
+        %{email: "firstuser@example.com", password: "password", password_confirmation: "password"}
+      )
+      conn = Phoenix.ConnTest.build_conn()
+      |> Plug.Session.call(@signing_opts)
+      |> Plug.Conn.fetch_session()
+      conn
+      |> Guardian.Plug.sign_in(user, nil)
+      |> Guardian.Plug.VerifySession.call(%{})
+      {conn, user}
+    else
+      {Phoenix.ConnTest.build_conn(), nil}
+    end
+
+    {:ok, conn: conn, user: user}
   end
 
 end

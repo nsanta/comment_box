@@ -6,15 +6,16 @@ defmodule CommentBox.Auth.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias CommentBox.Auth.User
+  alias CommentBox.Boxes.Comment
   alias Comeonin.Bcrypt
 
   @mail_regex ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/
-
 
   schema "users" do
     field :email, :string
     field :password, :string
     field :password_confirmation, :string, virtual: true
+    has_many :comments, Comment
     timestamps()
   end
 

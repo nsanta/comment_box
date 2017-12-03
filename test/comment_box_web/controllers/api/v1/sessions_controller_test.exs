@@ -14,6 +14,7 @@ defmodule CommentBoxWeb.Api.V1.SessionsControllerTest do
     end
     
     test "registers a new user with invalid attributes", %{conn: conn} do 
+      {:ok, user} = Auth.create_user(Map.merge(@valid_attrs, %{password_confirmation: "some password"}))
       conn = post conn, "/api/v1/sessions", user: @invalid_attrs
       assert conn.status == 422
     end

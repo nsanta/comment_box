@@ -1,6 +1,13 @@
 defmodule CommentBoxWeb.Router do
   use CommentBoxWeb, :router
 
+  pipeline :auth do
+    plug CommentBox.Auth.Pipeline
+  end
+  pipeline :ensure_auth do
+    plug Guardian.Plug.EnsureAuthenticated
+  end
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -21,11 +28,17 @@ defmodule CommentBoxWeb.Router do
   end
   
   scope "/api/v1", CommentBoxWeb.Api.V1 do
-    pipe_through :api
-    
+    pipe_through [:api]
+
     post "/sessions", SessionsController, :create
-    post "/registrations", RegistrationsController, :create
+    post "/registrations", RegistrationsController, :create 
+  end
+  
+  scope "/api/v1", CommentBoxWeb.Api.V1 do
+    pipe_through [:api, :auth, :ensure_auth]
+     
     delete "/sessions", SessionsController, :delete
+    resources "/boxes/:box_id/comments", CommentsController, only: [:index, :create]    
   end
 
 end
