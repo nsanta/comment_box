@@ -48,8 +48,7 @@ defmodule CommentBoxWeb.ConnCase do
       conn = Phoenix.ConnTest.build_conn()
       |> Plug.Session.call(@signing_opts)
       |> Plug.Conn.fetch_session()
-      conn
-      |> Guardian.Plug.sign_in(user, nil)
+      |> Guardian.Plug.sign_in(user, :access)
       |> Guardian.Plug.VerifySession.call(%{})
       {conn, user}
     else
