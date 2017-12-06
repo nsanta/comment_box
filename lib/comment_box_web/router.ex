@@ -25,6 +25,7 @@ defmodule CommentBoxWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/embed/box", BoxesController, :show
   end
   
   scope "/api/v1", CommentBoxWeb.Api.V1 do

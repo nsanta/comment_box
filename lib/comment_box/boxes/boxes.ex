@@ -37,6 +37,10 @@ defmodule CommentBox.Boxes do
   """
   def get_box!(id), do: Repo.get!(Box, id)
 
+  def get_or_create_box_by(query) do 
+    Repo.get_by(Box, query) || create_box(query)
+  end
+
   @doc """
   Creates a box.
 
