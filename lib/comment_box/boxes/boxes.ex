@@ -199,12 +199,9 @@ defmodule CommentBox.Boxes do
     Comment.changeset(comment, %{})
   end
 
+
   def analyze_comment(%Comment{} = comment) do 
     result = Sentient.analyze(comment.message)
-    update_comment(comment, {sentiment_score: result})
-  end
-
-  def perform_analyze_comment(%Comment = comment) do
-    Task.async(CommentBox.Boxes, :analyze_comment, [comment])
+    update_comment(comment, %{sentiment_score: result})
   end
 end

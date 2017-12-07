@@ -18,6 +18,7 @@ defmodule CommentBoxWeb.Api.V1.CommentsController do
 
   defp comment_reply(conn, {:ok, comment}) do
     CommentBoxWeb.BoxChannel.broadcast_comment_change('create', comment)
+    perform_analyze_comment(comment)
     conn |> render('show.json', comment: comment)
   end
 
@@ -25,9 +26,19 @@ defmodule CommentBoxWeb.Api.V1.CommentsController do
     conn |> render('422.json', comment: comment)
   end
 
+  defp perform_analyze_comment(comment) do
+    Task.async fn ->
+      {:ok, result} = Boxes.analyze_comment(comment)
+      cond do
+        result < -5 -> 
+          CommentBoxWeb.BoxChannel.broadcast_comment_change('delete', comment) 
+      end 
+    end
+  end
+
   defp find_box(conn, box_id) do
-    {:ok, box } CommentBox.Boxes.get_box!(box_id)
-    |> box_reply(box, conn)
+    {:ok, box} = CommentBox.Boxes.get_box!(box_id)
+    box_reply(box, conn)
   end
 
   defp box_reply({:ok, box}, _conn) do
