@@ -1,7 +1,6 @@
 defmodule CommentBoxWeb.Api.V1.CommentsController do
   use CommentBoxWeb, :controller
   alias CommentBox.Boxes
-  alias CommentBox.Boxes.{Box, Comment}
 
   def index(conn, %{"box_id" => box_id}) do
     box = find_box(conn, box_id)
@@ -18,6 +17,7 @@ defmodule CommentBoxWeb.Api.V1.CommentsController do
   end
 
   defp comment_reply(conn, {:ok, comment}) do
+    CommentBoxWeb.BoxChannel.broadcast_comment_change('create', comment)
     conn |> render('show.json', comment: comment)
   end
 
@@ -26,15 +26,15 @@ defmodule CommentBoxWeb.Api.V1.CommentsController do
   end
 
   defp find_box(conn, box_id) do
-    CommentBox.Boxes.get_box!(box_id)
-    |> box_reply(conn)
+    {:ok, box } CommentBox.Boxes.get_box!(box_id)
+    |> box_reply(box, conn)
   end
 
-  defp box_reply({:ok, box}, conn) do
+  defp box_reply({:ok, box}, _conn) do
     box
   end
 
-  defp box_reply({:error, box}, conn) do
+  defp box_reply({:error, _box}, conn) do
     conn |> send_resp(:not_found, "") |> halt()
   end
 end
