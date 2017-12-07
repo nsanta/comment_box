@@ -43,6 +43,7 @@ defmodule CommentBox.Mixfile do
       {:guardian, "~> 1.0-beta"},
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 0.12"},
+      {:sentient, github: "Sitch/sentient"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.1", only: :test}

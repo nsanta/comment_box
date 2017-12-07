@@ -202,4 +202,10 @@ defmodule CommentBox.Boxes do
   def change_comment(%Comment{} = comment) do
     Comment.changeset(comment, %{})
   end
+
+
+  def analyze_comment(%Comment{} = comment) do 
+    result = Sentient.analyze(comment.message)
+    update_comment(comment, %{sentiment_score: result})
+  end
 end
