@@ -31,7 +31,6 @@ class CommentForm extends Component {
       }
     })
     .then((response) => {
-      this.props.onCommentCreation(response.data.data);
       this.setState({
         message: ''
       })

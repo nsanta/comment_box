@@ -4,7 +4,7 @@ import axios from 'axios';
 import AuthBox from './AuthBox';
 import Comments from './Comments';
 import CommentForm from './CommentForm';
-// import socket from "./socket"
+import socket from "../socket";
 
 class App extends Component {
 
@@ -22,6 +22,18 @@ class App extends Component {
   
   componentDidMount(){
     this.getComments();
+    this.channel = socket.channel("box:" + this.state.boxId, {});
+    this.channel.join()
+      .receive("ok", (resp) => { console.log("Joined successfully", resp) })
+      .receive("error", (resp) => { console.log("Unable to join", resp) })
+    this.channel.on("create", (payload) => {
+      this.onCommentCreation(payload);
+      console.log("on create PAYLOAD =====", payload);
+    });
+    this.channel.on("delete", (payload) => {
+      this.onCommentDeletion(payload);
+      console.log("on delete PAYLOAD =====", payload);
+    });
   }
 
   getComments(){
@@ -32,12 +44,20 @@ class App extends Component {
   }
 
   onCommentCreation(comment){
-    let newComments =  this.state.comments;
-    newComments.push(comment);
+    let newCommentList =  this.state.comments;
+    newCommentList.push(comment);
     this.setState({
-      comments: newComments
+      comments: newCommentList
     });
-    console.log(this.state.comments); 
+  }
+
+  onCommentDeletion(comment){
+    let newCommentList =  this.state.comments;
+    let commentToUpdate = newCommentList.find((c)=> comment.id == c.id);
+    commentToUpdate.message = "[DELETED]";
+    this.setState({
+      comments: newCommentList
+    });
   }
 
   onLoggedIn(){
@@ -55,7 +75,7 @@ class App extends Component {
     if(this.state.loggedIn) {
       return (
         <div>
-          <CommentForm onCommentCreation={this.onCommentCreation} boxId={this.state.boxId} />
+          <CommentForm boxId={this.state.boxId} />
           <div className="pull-right" ><a onClick={this.logout} href="#">Logout</a></div>
         </div>
       );

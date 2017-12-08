@@ -3,12 +3,21 @@ import PropTypes from 'prop-types';
 
 class Comment extends Component {
 
+  constructor(props){
+    super(props);
+    const divStyle = {
+      borderBottom: "1px solid silver"
+    };
+    this.divStyle = divStyle;
+  }
+
+  
   render() {
     return(
-      <div style="border-bottom: 1px solid silver;">
-        <div>{this.props.comment.message}</div>
-        <div>{this.props.comment.user_id}</div>
-        <div>{this.props.comment.inserted_at}</div>
+      <div style={this.divStyle}>
+        <div>Comment: {this.props.comment.message}</div>
+        <div>User: {this.props.comment.user_id}</div>
+        <div>Created at: {this.props.comment.inserted_at}</div>
       </div>
     );
   }

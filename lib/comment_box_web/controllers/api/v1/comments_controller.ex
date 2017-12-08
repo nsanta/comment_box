@@ -29,10 +29,10 @@ defmodule CommentBoxWeb.Api.V1.CommentsController do
 
   defp perform_analyze_comment(comment) do
     Task.async fn ->
-      {:ok, result} = Boxes.analyze_comment(comment)
+      {:ok, comment_updated} = Boxes.analyze_comment(comment)
       cond do
-        result < -5 -> 
-          CommentBoxWeb.BoxChannel.broadcast_comment_change("delete", comment) 
+        comment_updated.sentiment_score <= -5 -> 
+          CommentBoxWeb.BoxChannel.broadcast_comment_change("delete", comment_updated) 
         true ->
       end 
     end

@@ -10,6 +10,7 @@ defmodule CommentBox.Boxes.Comment do
 
   schema "comments" do
     field :message, :string
+    field :sentiment_score , :integer
     belongs_to :box, Box
     belongs_to :user, User
     timestamps()
@@ -18,7 +19,7 @@ defmodule CommentBox.Boxes.Comment do
   @doc false
   def changeset(%Comment{} = comment, attrs) do
     comment
-    |> cast(attrs, [:message, :user_id, :box_id])
+    |> cast(attrs, [:message, :user_id, :box_id, :sentiment_score])
     |> validate_required([:message, :user_id, :box_id])
   end
 end

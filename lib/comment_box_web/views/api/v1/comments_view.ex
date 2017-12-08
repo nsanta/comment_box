@@ -11,14 +11,14 @@ defmodule CommentBoxWeb.Api.V1.CommentsView do
   end
 
   def render("comment.json", %{comment: comment}) do
-    %{message: comment.message,
-      user:  comment.user_id,
-      inserted_at: comment.inserted_at}
+    %{id: comment.id,
+    message: comment.message,
+    user_id:  comment.user_id,
+    inserted_at: comment.inserted_at,
+    sentiment_score: comment.sentiment_score}
   end
 
   def render("comment.json", %{comments: comments}) do
-    %{message: comments.message,
-      user:  comments.user_id,
-      inserted_at: comments.inserted_at}
+    render("comment.json", %{comment: comments})
   end
 end

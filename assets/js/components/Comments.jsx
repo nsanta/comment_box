@@ -5,26 +5,11 @@ import Comment from './Comment';
 
 class Comments extends Component {
 
-  constructor(props){
-    super(props);
-    console.log(props.commentList);
-    this.state = {
-      comments: []
-    };
-  }
-
-  componentWillMount(){
-    console.log(this.props.commentList);
-    this.setState({
-      comments: this.props.commentList
-    });
-  }
-
   renderContainer(){
-    if (this.state.comments.length > 0){
-      this.state.comments.map((comment) =>{
+    if (this.props.commentList.length > 0){
+      return this.props.commentList.map((comment) =>{
         return (
-          <Comment comment={comment}></Comment>
+          <Comment key={comment.id} comment={comment}></Comment>
         );
       });
     } else {
@@ -45,6 +30,6 @@ class Comments extends Component {
 
 Comments.propTypes = {
   commentList: PropTypes.array
-}
+};
 
 export default  Comments;

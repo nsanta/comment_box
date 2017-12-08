@@ -121,7 +121,9 @@ defmodule CommentBox.Boxes do
 
   """
   def list_comments(box_id) do
-    query = from c in Comment, where: c.box_id == ^box_id
+    query = from c in Comment, 
+      where: c.box_id == ^box_id and c.sentiment_score > -5,
+      order_by: c.inserted_at
     Repo.all(query)
   end
 
@@ -208,7 +210,8 @@ defmodule CommentBox.Boxes do
 
 
   def analyze_comment(%Comment{} = comment) do 
-    result = Sentient.analyze(comment.message)
-    update_comment(comment, %{sentiment_score: result})
+    score = Sentient.analyze(comment.message)
+    IO.inspect "MESSAGE ANALYZED: #{comment.message} AND SCORE: #{score}"
+    update_comment(comment, %{sentiment_score: score})
   end
 end
