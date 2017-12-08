@@ -19,3 +19,11 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
+import React from 'react';
+import { render } from 'react-dom';
+import App from './components/App';
+
+window.onload = function(){
+  let root = document.getElementById('app');
+  render(<App boxId={root.getAttribute('boxId')} loggedIn={root.getAttribute('loggedIn') === "true"} />, root);
+}
