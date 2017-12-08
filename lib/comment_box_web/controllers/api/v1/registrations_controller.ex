@@ -18,6 +18,6 @@ defmodule CommentBoxWeb.Api.V1.RegistrationsController do
   defp registrations_reply({:ok, user}, conn) do
     conn
     |> Guardian.Plug.sign_in(user)
-    |> send_resp(:no_content, "")
+    |> send_resp(:ok, "")
   end
 end

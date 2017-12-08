@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-export default class Comment extends Component {
+class Comment extends Component {
 
   render() {
     return(
-      <div>
-        Ahoy
+      <div style="border-bottom: 1px solid silver;">
+        <div>{this.props.comment.message}</div>
+        <div>{this.props.comment.user_id}</div>
+        <div>{this.props.comment.inserted_at}</div>
       </div>
     );
   }
 }
+
+Comment.propTypes = {
+  comment: PropTypes.object
+}
+
+export default Comment;

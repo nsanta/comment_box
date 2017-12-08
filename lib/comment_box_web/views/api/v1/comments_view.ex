@@ -15,4 +15,10 @@ defmodule CommentBoxWeb.Api.V1.CommentsView do
       user:  comment.user_id,
       inserted_at: comment.inserted_at}
   end
+
+  def render("comment.json", %{comments: comments}) do
+    %{message: comments.message,
+      user:  comments.user_id,
+      inserted_at: comments.inserted_at}
+  end
 end

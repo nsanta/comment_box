@@ -11,7 +11,6 @@ defmodule CommentBoxWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-    plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -22,7 +21,7 @@ defmodule CommentBoxWeb.Router do
   end
 
   scope "/", CommentBoxWeb do
-    pipe_through :browser # Use the default browser stack
+    pipe_through [:browser, :auth] # Use the default browser stack
 
     get "/", PageController, :index
     get "/embed/box", BoxesController, :show
@@ -33,13 +32,14 @@ defmodule CommentBoxWeb.Router do
 
     post "/sessions", SessionsController, :create
     post "/registrations", RegistrationsController, :create 
+    resources "/boxes/:box_id/comments", CommentsController, only: [:index]
   end
   
   scope "/api/v1", CommentBoxWeb.Api.V1 do
     pipe_through [:api, :auth, :ensure_auth]
      
     delete "/sessions", SessionsController, :delete
-    resources "/boxes/:box_id/comments", CommentsController, only: [:index, :create]    
+    resources "/boxes/:box_id/comments", CommentsController, only: [:create]    
   end
 
 end
