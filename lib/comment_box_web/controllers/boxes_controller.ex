@@ -12,6 +12,6 @@ defmodule CommentBoxWeb.BoxesController do
   end
 
   defp authenticated?(conn) do
-    Guardian.Plug.current_resource(conn) === "1"
+    Guardian.Plug.current_resource(conn) != nil
   end
 end
